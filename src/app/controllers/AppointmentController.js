@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { startOfHour, parseISO, isBefore, format } from 'date-fns';
+import pt from 'date-fns/locale/pt-BR';
 
 import Appointment from '../models/Appointment';
 import User from '../models/User';
@@ -54,6 +55,13 @@ class AppointmentController {
       return res
         .status(401)
         .json({ error: 'You can only create appointments with providers.' });
+    }
+
+    //Check if user is also the provider
+    if (req.userId == provider_id) {
+      return res
+        .status(400)
+        .json({ error: 'You can not create appointments with yourself.' });
     }
 
     //Check for past dates
