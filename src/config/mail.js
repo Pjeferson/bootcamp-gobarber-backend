@@ -6,7 +6,7 @@ export default {
     user: '4f925a009604c9',
     pass: '6ff71cb113b85d',
   },
-  deafult: {
+  default: {
     from: 'Equipe GoBarber <noreply@gobarber.com>',
   },
 };
