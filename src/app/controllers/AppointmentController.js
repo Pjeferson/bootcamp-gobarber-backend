@@ -97,7 +97,7 @@ class AppointmentController {
     const user = await User.findByPk(req.userId);
     const formattedDate = format(
       hourStart,
-      "'dia' dd 'de' MMMM', às' HH:MM'h'",
+      "'dia' dd 'de' MMMM', às' H:mm'h'",
       { locale: pt }
     );
     await Notification.create({
@@ -114,6 +114,11 @@ class AppointmentController {
         {
           model: User,
           as: 'provider',
+          attributes: ['name', 'email'],
+        },
+        {
+          model: User,
+          as: 'user',
           attributes: ['name', 'email'],
         },
       ],
@@ -137,7 +142,14 @@ class AppointmentController {
     await Mail.sendMail({
       to: `${appointment.provider.name} <${appointment.provider.email}>`,
       subject: 'Agendamento cancelado',
-      text: 'Você tem um novo cancelamento.',
+      template: 'cancellation',
+      context: {
+        provider: appointment.provider.name,
+        user: appointment.user.name,
+        date: format(appointment.date, "'dia' dd 'de' MMMM', às' H:mm'h'", {
+          locale: pt,
+        }),
+      },
     });
 
     return res.json(appointment);
